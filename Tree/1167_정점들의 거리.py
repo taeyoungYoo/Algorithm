@@ -5,14 +5,16 @@ input = sys.stdin.readline
 Pmax = 20
 n = int(input())
 parent = [[0] * Pmax for _ in range(n + 1)]
+length = [[0] * Pmax for _ in range(n + 1)]
 visited = [False] * (n + 1)
 d = [0] * (n + 1)
 graph = [[] for _ in range(n + 1)]
 
+
 for _ in range(n - 1):
-    a, b = map(int, input().split())
-    graph[a].append(b)
-    graph[b].append(a)
+    a, b, c = map(int, input().split())
+    graph[a].append((b, c))
+    graph[b].append((a, c))
 
 # DFS or BFS for depth
 def dfs(x, depth):
@@ -20,10 +22,13 @@ def dfs(x, depth):
     d[x] = depth
 
     for node in graph[x]:
-        if visited[node]:
+        next_node = parent[node][0]
+        distance = parent[node][1]
+        if visited[next_node]:
             continue
-        parent[node][0] = x
-        dfs(node, depth + 1)
+        parent[next_node][0] = x
+        length[next_node][0] = distance
+        dfs(next_node, depth + 1)
 
 
 # Recurrence relation
@@ -59,6 +64,7 @@ set_parent()
 
 m = int(input())
 
+
 for _ in range(m):
     a, b = map(int, input().split())
-    print(lca(a, b))
+    print(d[a] + d[b] - lca(a, b))
