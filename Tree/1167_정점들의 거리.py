@@ -49,17 +49,18 @@ def lca(a, b):
     ret = 0
     for i in range(Pmax - 1, -1, -1):
         if d[b] - d[a] >= 2 ** i:
-            b = parent[b][i]
             ret += length[b][i]
+            b = parent[b][i]
 
     if a == b:
         return ret
 
     for i in range(Pmax - 1, -1, -1):
         if parent[a][i] != parent[b][i]:
+            ret += length[a][i] + length[b][i]
             a = parent[a][i]
             b = parent[b][i]
-            ret += length[a][i] + length[b][i]
+
     ret += length[a][0] + length[b][0]
     return ret
 
