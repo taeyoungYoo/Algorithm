@@ -1,11 +1,87 @@
 import collections
 from itertools import combinations
-info = ["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150",
-        "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"]
-query = ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200",
-         "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100",
-         "- and - and - and - 150"]
+from bisect import bisect_left
 
-for i in range(5):
-    comb = list(combinations(range(4), i))
-    print(comb)
+def solution(info, query):
+    answer = []
+
+    info_split = [x.split(' ') for x in info]
+    query_split = [x.split(' ') for x in query]
+    score_info = [int(x.pop()) for x in info_split]
+    score_query = [int(x.pop()) for x in query_split]
+    for i in range(len(query_split)):
+        while True:
+            try:
+                query_split[i].remove('and')
+            except:
+                break
+        query_split[i] = ''.join(query_split[i])
+
+    info_dict = collections.defaultdict(list)
+
+    for i in range(len(info_split)):
+        for j in range(5):
+            for combi in combinations(range(4), j):
+                key_cand = []
+                for k in range(4):
+                    if k in combi:
+                        key_cand.append('-')
+                    else:
+                        key_cand.append(info_split[i][k])
+                info_dict[''.join(key_cand)].append(score_info[i])
+
+    for key in info_dict.keys():
+        info_dict[key].sort()
+
+    for i in range(len(query_split)):
+        target = score_query[i]
+        if query_split[i] in info_dict.keys():
+            answer.append(len(info_dict[query_split[i]]) - bisect_left(info_dict[query_split[i]], target))
+        else:
+            answer.append(0)
+    return answer
+
+
+# import collections
+# from itertools import combinations
+#
+# def solution(info, query):
+#     answer = []
+#
+#     info_split = [x.split(' ') for x in info]
+#     query_split = [x.split(' ') for x in query]
+#     score_info = [int(x.pop()) for x in info_split]
+#     score_query = [int(x.pop()) for x in query_split]
+#     for i in range(len(query_split)):
+#         while True:
+#             try:
+#                 query_split[i].remove('and')
+#             except:
+#                 break
+#         query_split[i] = ''.join(query_split[i])
+#
+#     info_dict = collections.defaultdict(list)
+#
+#     for i in range(len(info_split)):
+#         for j in range(5):
+#             for combi in combinations(range(4), j):
+#                 key_cand = []
+#                 for k in range(4):
+#                     if k in combi:
+#                         key_cand.append('-')
+#                     else:
+#                         key_cand.append(info_split[i][k])
+#                 info_dict[''.join(key_cand)].append(score_info[i])
+#
+#     for key in info_dict.keys():
+#         info_dict[key].sort()
+#
+#     for i in range(len(query_split)):
+#         target = score_query[i]
+#         cand = info_dict[query_split[i]]
+#         ret = 0
+#         for score in cand:
+#             if score >= target:
+#                 ret += 1
+#         answer.append(ret)
+#     return answer
