@@ -1,15 +1,35 @@
+'''
+    2021 Kakao Tech Internship 문제
+    두 큐의 합 같게 만들기
+    두 큐의 길이는 같으며 len(q) <= 300,000
+'''
+
 import collections
+
 def solution(queue1, queue2):
     answer = 0
     q1 = collections.deque(queue1)
     q2 = collections.deque(queue2)
-    target = (sum(q1) + sum(q2))/2
-    while(q1 and q2 and sum(q1) != target):
-        if sum(q1) > sum(q2):
-            q2.append(q1.popleft())
+    sum1 = sum(q1)
+    sum2 = sum(q2)
+    if (sum1 + sum2) % 2 == 1:
+        return -1
+    target = (sum1 + sum2) // 2
+    # 최대 반복 횟수 설정해서 무한 루프 방지
+    for i in range(3 * len(q1)):
+        if sum1 == target or not q1 or not q2:
+            break
+        elif sum1 > sum2:
+            val = q1.popleft()
+            q2.append(val)
+            sum1 -= val
+            sum2 += val
         else:
-            q1.append(q2.popleft())
-        answer += 1
-    if not q1 or not q2 or sum(q1) != target:
+            val = q2.popleft()
+            q1.append(val)
+            sum1 += val
+            sum2 -= val
+    answer = i
+    if not q1 or not q2 or sum1 != target:
         answer = -1
     return answer
