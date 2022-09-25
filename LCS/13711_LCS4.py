@@ -1,21 +1,30 @@
 '''
     BOJ 13711 LCS4
     LCS 크기 구하기
+    - 두 수열에는 중복되는 수가 없다
+    - LIS 문제로 변경 후 O(nlogn) 적용
 '''
+import collections
+from bisect import bisect_left
 
 n = int(input())
-a = list(map(str, input().split()))
-b = list(map(str, input().split()))
-a = ''.join(a)
-b = ''.join(b)
+arr_1 = list(map(int, input().split()))
+arr_2 = list(map(int, input().split()))
+lis = []
 
-dp = [[0] * (len(b)+1) for _ in range(len(a)+1)]
+dic_a = collections.defaultdict(int)
 
-for i in range(1, len(a)+1):
-    for j in range(1, len(b)+1):
-        if a[i-1] == b[j-1]:
-            dp[i][j] = dp[i-1][j-1] + 1
-        else:
-            dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+for i in range(n):
+    dic_a[arr_1[i]] = i
+for i in range(n):
+    lis.append(dic_a[arr_2[i]])
+tmp = []
 
-print(dp[len(a)][len(b)])
+tmp.append(lis[0])
+for i in range(1, n):
+    if tmp[-1] < lis[i]:
+        tmp.append(lis[i])
+    else:
+        replace_idx = bisect_left(tmp, lis[i])
+        tmp[replace_idx] = lis[i]
+print(len(tmp))
