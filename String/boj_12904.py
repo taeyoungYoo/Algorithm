@@ -5,35 +5,59 @@
     - dfs 사용
 '''
 
-
-
-isPossible = False
-def dfs(init_str, result_str):
-    global isPossible
-    if len(init_str) == len(result_str) and init_str == result_str:
-        isPossible = True
-        return
-    elif len(init_str) == len(result_str):
-        return
-    dfs(init_str + 'A', result_str)
-    dfs(init_str[::-1] + 'B', result_str)
-
-
 def solution():
     s = input()
     t = input()
-    if len(s) > len(t):
+    if s == t:
+        print(1)
+        return
+    elif len(s) > len(t):
         print(0)
         return
-    elif s == t:
+    lim = len(s)
+    while len(t) != lim:
+        if t[-1] == 'A':
+            t = t[:-1]
+        elif t[-1] == 'B':
+            t = t[:-1]
+            t = t[::-1]
+    if s == t:
         print(1)
-        return
-    dfs(s, t)
-    if isPossible:
-        print(1)
-        return
     else:
         print(0)
-        return
+    return
 
 solution()
+
+
+# DFS approach
+# isPossible = False
+# def dfs(init_str, result_str):
+#     global isPossible
+#     if len(init_str) == len(result_str) and init_str == result_str:
+#         isPossible = True
+#         return
+#     elif len(init_str) == len(result_str):
+#         return
+#     dfs(init_str + 'A', result_str)
+#     dfs(init_str[::-1] + 'B', result_str)
+#
+#
+# def solution():
+#     s = input()
+#     t = input()
+#     if len(s) > len(t):
+#         print(0)
+#         return
+#     elif s == t:
+#         print(1)
+#         return
+#     dfs(s, t)
+#     if isPossible:
+#         print(1)
+#         return
+#     else:
+#         print(0)
+#         return
+#
+# solution()
