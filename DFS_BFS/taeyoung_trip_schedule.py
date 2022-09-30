@@ -7,28 +7,22 @@ from collections import defaultdict
 
 
 route = ['ICN']
-visited = []
 graph = defaultdict(list)
-answer = []
 
 
 def find_route(node, target):
-    global graph, route, answer
     if len(route) == target:
-        answer = route.copy()
-        return
+        return True
+    if not graph[node]:
+        return True
     for next_ in graph[node]:
-        try:
-            check = visited.index([node, next_])
-        except:
-            return
-        if visited[check] != 0:
-            visited[check] = 0
-            route.append(next_)
-            find_route(next_, target)
-            route.pop()
-            visited[check] = [node, next_]
-
+        route.append(next_)
+        keep = graph[node].pop(0)
+        ret = find_route(next_, target)
+        if not ret:
+            graph[node].append(keep)
+    route.pop()
+    return False
 
 def make_graph(tickets):
     lim = len(tickets)
@@ -41,13 +35,12 @@ def make_graph(tickets):
 
 
 def solution(tickets):
-    global route, answer, visited, graph
+    global route, graph
     graph = make_graph(tickets)
-    visited = tickets
-
+    print(graph)
     find_route('ICN', len(tickets) + 1)
 
-    return answer
+    return route
 
 # tickets = [["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]
 tickets = [["ICN", "AAA"], ["ICN", "CCC"], ["CCC", "DDD"], ["AAA", "BBB"], ["AAA", "BBB"], ["DDD", "ICN"], ["BBB", "AAA"]]
