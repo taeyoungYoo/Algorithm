@@ -6,24 +6,24 @@
 from collections import defaultdict
 
 
-route = ['ICN']
 graph = defaultdict(list)
 
 
-def find_route(node, target):
+# dfs approach로 route 탐색
+# 탐색 후 모든 티켓을 사용하지 않았다면 다시 탐색
+# visited를 사용하지 않고 그래프를 pop, insert해서 사용
+def find_route(node, route, target):
     if len(route) == target:
-        return True
-    if not graph[node]:
-        return True
-    for next_ in graph[node]:
-        route.append(next_)
-        keep = graph[node].pop(0)
-        ret = find_route(next_, target)
-        if not ret:
-            graph[node].append(keep)
-    route.pop()
-    return False
+        return route
+    for idx, next_ in enumerate(graph[node]):
+        keep = graph[node].pop(idx)
+        ret = find_route(next_, route + [next_], target)
+        graph[node].insert(idx, keep)
+        if ret:
+            return ret
 
+
+# 그래프 생성
 def make_graph(tickets):
     lim = len(tickets)
     graph = defaultdict(list)
@@ -35,13 +35,7 @@ def make_graph(tickets):
 
 
 def solution(tickets):
-    global route, graph
+    global graph, route
     graph = make_graph(tickets)
-    print(graph)
-    find_route('ICN', len(tickets) + 1)
-
-    return route
-
-# tickets = [["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]
-tickets = [["ICN", "AAA"], ["ICN", "CCC"], ["CCC", "DDD"], ["AAA", "BBB"], ["AAA", "BBB"], ["DDD", "ICN"], ["BBB", "AAA"]]
-print(solution(tickets))
+    ret = find_route('ICN', ['ICN'], len(tickets) + 1)
+    return ret
