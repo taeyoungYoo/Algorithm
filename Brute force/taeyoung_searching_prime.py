@@ -31,5 +31,3 @@ def solution(numbers):
                 primes[int(''.join(j))] = False
                 answer += 1
     return answer
-
-solution("011")
