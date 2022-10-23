@@ -5,16 +5,14 @@
     - DFS 사용
 '''
 
-visited = []
-def dfs(node, graph):
-    global visited
+
+def dfs(node, graph, visited):
     visited[node] = 1
     for next in graph[node]:
         if visited[next] == 0:
-            dfs(next, graph)
+            dfs(next, graph, visited)
 
 def solution(n, computers):
-    global visited
     visited = [0] * n
     graph = [[] for _ in range(n)]
 
@@ -27,6 +25,6 @@ def solution(n, computers):
     answer = 0
     for i in range(n):
         if visited[i] == 0:
-            dfs(i, graph)
+            dfs(i, graph, visited)
             answer += 1
     return answer

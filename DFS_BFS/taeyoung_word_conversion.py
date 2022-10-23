@@ -7,11 +7,8 @@
 '''
 from collections import deque
 
-graph = []
-
-
 # 최단거리 반환 함수 -> BFS 활용
-def find_route(start, target, lim):
+def find_route(start, target, lim, graph):
     q = deque()
     q.append((start, 1))
     visited = [0] * lim
@@ -41,8 +38,6 @@ def comp_str(a, b):
 def solution(begin, target, words):
     if target not in words:
         return 0
-
-    global graph
     lim = len(words)
     # 그래프 찾기
     graph = [[] for _ in range(lim)]
@@ -61,7 +56,7 @@ def solution(begin, target, words):
     answer = 55
     # 각 후보 word에 대해 최단거리 구해서 global 최단거리 찾기
     for node in cand:
-        route = find_route(node, target, lim)
+        route = find_route(node, target, lim, graph)
         if route < answer:
             answer = route
     # 결과 리턴

@@ -5,8 +5,7 @@
 from collections import defaultdict,deque
 
 
-def find_linked(node, n):
-    global graph
+def find_linked(node, n, graph):
     visited = [0] * n
     q = deque()
     q.append(node)
@@ -23,7 +22,6 @@ def find_linked(node, n):
 
 
 def solution(n, wires):
-    global graph, answer
     answer = 100
     graph = defaultdict(list)
     for wire in wires:
@@ -33,7 +31,7 @@ def solution(n, wires):
     for wire in wires:
         graph[wire[0]].remove(wire[1])
         graph[wire[1]].remove(wire[0])
-        tmp = find_linked(wire[0], n+1)
+        tmp = find_linked(wire[0], n+1, graph)
         answer = min(answer, abs(n-2*tmp))
         graph[wire[0]].append(wire[1])
         graph[wire[1]].append(wire[0])

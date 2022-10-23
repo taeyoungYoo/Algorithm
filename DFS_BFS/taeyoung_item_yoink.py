@@ -7,16 +7,7 @@
 from collections import deque
 
 
-# 전역변수 설정
-lim = 101
-min_r = 0
-max_r = 100
-min_c = 0
-max_c = 100
-rec_map = [[0] * lim for _ in range(lim)]
-
-
-def make_map(rec):
+def make_map(rec, rec_map, min_r, max_r, min_c, max_c):
     '''
     이동이 가능한 좌표를 rec_map에 표시
     -1 : 이동 불가(직사각형 내부)
@@ -25,16 +16,11 @@ def make_map(rec):
     :param rec: 직사각형 좌표
     :return:
     '''
-    global rec_map, min_r, max_r, min_c, max_c
     block = -1
     init_dist = 10001
     # scaling with factor 2
     for i in range(4):
         rec[i] *= 2
-    min_r = min(min_r, rec[1])
-    max_r = max(max_r, rec[3])
-    min_c = min(min_c, rec[0])
-    max_c = max(max_c, rec[2])
     for i in range(rec[0], rec[2]+1):
         if rec_map[rec[1]][i] != block:
             rec_map[rec[1]][i] = init_dist
@@ -50,7 +36,7 @@ def make_map(rec):
             rec_map[j][i] = block
 
 
-def find_route(r, c, tar_r, tar_c):
+def find_route(r, c, tar_r, tar_c, rec_map, min_r, max_r, min_c, max_c):
     '''
     BFS를 통해 최소 루트 탐색
     :param r: 유저 y좌표
@@ -79,11 +65,17 @@ def find_route(r, c, tar_r, tar_c):
 
 
 def solution(rectangle, characterX, characterY, itemX, itemY):
+    lim = 101
+    min_r = 0
+    max_r = 100
+    min_c = 0
+    max_c = 100
+    rec_map = [[0] * lim for _ in range(lim)]
     for rec in rectangle:
-        make_map(rec)
+        make_map(rec, rec_map, min_r, max_r, min_c, max_c)
     characterY *= 2
     characterX *= 2
     itemY *= 2
     itemX *= 2
-    answer = find_route(characterY, characterX, itemY, itemX)
+    answer = find_route(characterY, characterX, itemY, itemX, rec_map, min_r, max_r, min_c, max_c)
     return answer
